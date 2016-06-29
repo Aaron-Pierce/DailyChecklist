@@ -22,21 +22,31 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.2/js/tether.min.js"></script>
 
 </head>
 
-<body class="body">
+<body>
+<div class="body">
+
 <h1 class="greeting animated slideInLeft">Hello, Welcome To Your Day</h1>
 <h1 class="gone youNeed">Today, You Need To:<br></h1><br><br>
-
+</div>
+<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+<h6 class="add" style="text-decoration: underline">+ Add A Chore</h6>
 </body>
 <style>
 body,html {
     width: 100%;
     height: 100%;
     text-align: center;
-    margin-top: 2%;
+
     cursor: default;
+}
+.body{
+    width: 100%;
+    height: 90%;
+    margin-top: 2%;
 }
 body{
     background-color: #2196F3;
@@ -58,8 +68,8 @@ body{
     }
     .chore{
         font-family: roboto;
-        /*color: #E3F2FD;*/
-        color: #131313;
+        color: #E3F2FD;
+        /*color: #131313;*/
         font-size: 5em;
         cursor: pointer;
         -webkit-user-select: none; /* Chrome/Safari */
@@ -71,6 +81,22 @@ body{
         user-select: none;
         display: inline-block;
         width: 100%;
+    }
+    .divider{
+        color: white;
+        background-color: white;
+        border-color: white;
+
+    }
+    .add{
+        float: right;
+        margin-right: 1%;
+        /*margin-bottom: 5%;*/
+        position: fixed;
+        display: inline-block;
+        margin-right: 0;
+        color: white;
+        cursor: pointer;
     }
 </style>
 <script>
@@ -87,29 +113,55 @@ body{
 //    THIS
 //    ARRAY
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-    var chores = ['Practice Trumpet', 'Do One Programming Course', 'Go For A Run'];
+
+var dates = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+var currentDay = dates[new Date().getDay()];
+var donotshow = localStorage.getItem('dontShow');
+if(localStorage.getItem('lastDay') !== currentDay){
+    localStorage.setItem('dontShow', '');
+    localStorage.setItem('lastDay', currentDay);
+}else{
+
+}
+
+var todaysChores = localStorage.getItem(currentDay).split(',');
+
+
+
+
+
+
+//    var chores = ['Practice Trumpet', 'Do One Programming Course', 'Go For A Run'];
     $('.greeting').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
     $('.youNeed').css('opacity', '100').addClass('animated slideInLeft');
         $('.youNeed').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
 
-
+            $('.body').append('<hr class="divider animated slideInLeft">');
                 var i = 0;                     //  set your counter to 1
 
                 function myLoop () {           //  create a loop function
-                    setTimeout(function () {    //  call a 3s setTimeout when the loop is called
-                        $('.body').append("<div class='animated slideInLeft' id=" + "'" + i + "'" + "><h4 class='chore'>" + chores[i] + "</h4></div><br>");        //  your code here
-                        $('.chore').click(function () {
+                    setTimeout(function () {    //  call a 0.25s setTimeout when the loop is called
+                        $('.body').append("<div class='animated slideInLeft' style=' width: 100%; display: inline-block' id=" + "'" + i + "'" + "><h4 class='chore' id=" + "'" + i + "'" + " >" + todaysChores[i] + "</h4></div><br><br>");        //  your code here
+                        setTimeout(function () {
+                            $('#' + i).css('height', 'auto');
+                        }, 4);
+
+                        $('.chore').click(function (event) {
+                            var donotshow = localStorage.getItem('dontShow');
+                            localStorage.setItem('dontShow', donotshow + this.id + ",");
 
                             $(this).addClass('animated, tada').fadeOut();
                         });
-                        var animFinNum = chores.length - 1;
+
+
+
+                        var animFinNum = todaysChores.length - 1;
                         console.log('#' + animFinNum);
                         $('#' + animFinNum).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-
-
+                            $(this).css('height', 'auto');
                         });
                         i++;                     //  increment the counter
-                        if (i < chores.length) {            //  if the counter < 10, call the loop function
+                        if (i < todaysChores.length) {            //  if the counter < 10, call the loop function
                             myLoop();             //  ..  again which will trigger another
                         }                        //  ..  setTimeout()
                     }, 250)
@@ -117,11 +169,24 @@ body{
 
                 myLoop();
 
+            setTimeout(function () {
+                console.log("hi");
+                for (x = 0; x < donotshow.length; x++) {
+                    console.log("hi");
+                    $("#" + x).fadeOut();
+                }
+            }, 2500);
+
 
         });
     });
 
 
 
+</script>
+<script>
+    $('.add').click(function () {
+       window.location.assign("./addChore.html")
+    });
 </script>
 </html>
